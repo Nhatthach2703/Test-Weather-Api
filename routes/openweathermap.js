@@ -22,10 +22,27 @@ router.get('/current', async (req, res) => {
     const data = response.data;
     res.json({
       city: data.name,
-      temperature: data.main.temp,
-      weather: data.weather[0].description,
-      humidity: data.main.humidity,
-      wind_speed: data.wind.speed, // m/s
+      coord: data.coord, // tọa độ
+      country: data.sys.country, // quốc gia
+      temperature: data.main.temp, // độ C
+      feels_like: data.main.feels_like, // cảm giác như
+      temp_min: data.main.temp_min, // nhiệt độ thấp nhất
+      temp_max: data.main.temp_max, // nhiệt độ cao nhất
+      pressure: data.main.pressure, // áp suất (hPa)
+      humidity: data.main.humidity, // độ ẩm (%)
+      visibility: data.visibility, // tầm nhìn (m)
+      wind_speed: (data.wind.speed * 3.6).toFixed(2), // km/h
+      wind_deg: data.wind.deg, // hướng gió (độ)
+      wind_gust: data.wind.gust, // giật gió (nếu có)
+      clouds: data.clouds.all, // % mây
+      weather: data.weather[0].description, // mô tả thời tiết
+      weather_main: data.weather[0].main, // loại thời tiết
+      sunrise: data.sys.sunrise, // unix timestamp
+      sunset: data.sys.sunset, // unix timestamp
+      timezone: data.timezone, // múi giờ (giây)
+      dt: data.dt, // thời điểm đo (unix timestamp)
+      base: data.base, // nội bộ API
+      id: data.id, // id thành phố
     });
   } catch (error) {
     console.error("OpenWeather Error:", error.response?.data || error.message);
