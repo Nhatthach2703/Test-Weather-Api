@@ -155,10 +155,33 @@ router.get('/current', async (req, res) => {
     const data = response.data.data;
     res.json({
       city,
-      temperature: data.values.temperature,
-      humidity: data.values.humidity,
-      windSpeed: data.values.windSpeed, // m/s
-      weatherCode: data.values.weatherCode,
+      temperature: data.values.temperature, // Nhiệt độ thực tế (°C)
+      temperatureApparent: data.values.temperatureApparent, // Nhiệt độ cảm nhận (°C)
+      dewPoint: data.values.dewPoint, // Điểm sương (°C)
+      humidity: data.values.humidity, // Độ ẩm không khí (%)
+      pressureSeaLevel: data.values.pressureSeaLevel, // Áp suất tại mực nước biển (hPa)
+      pressureSurfaceLevel: data.values.pressureSurfaceLevel, // Áp suất tại mặt đất (hPa)
+      windSpeed: data.values.windSpeed, // Tốc độ gió (m/s)
+      windDirection: data.values.windDirection, // Hướng gió (độ, 0=Bắc, 90=Đông, 180=Nam, 270=Tây)
+      windGust: data.values.windGust, // Gió giật (m/s)
+      cloudCover: data.values.cloudCover, // Độ che phủ mây (%)
+      // precipitationIntensity: data.values.precipitationIntensity, // Cường độ mưa (mm/h)
+      // precipitationType: data.values.precipitationType, // Loại mưa (1=mưa, 2=mưa tuyết, 3=tuyết, 4=mưa đá, 5=mưa lạnh, 6=không mưa)
+      visibility: data.values.visibility, // Tầm nhìn xa (km)
+      uvIndex: data.values.uvIndex, // Chỉ số UV
+      weatherCode: data.values.weatherCode, // Mã thời tiết tổng quát
+      // weatherCodeFullDay: data.values.weatherCodeFullDay, // Mã thời tiết cả ngày
+      // weatherCodeDay: data.values.weatherCodeDay, // Mã thời tiết ban ngày
+      // weatherCodeNight: data.values.weatherCodeNight, // Mã thời tiết ban đêm
+      // sunriseTime: data.values.sunriseTime, // Thời gian mặt trời mọc (ISO 8601)
+      // sunsetTime: data.values.sunsetTime, // Thời gian mặt trời lặn (ISO 8601)
+      // snowDepth: data.values.snowDepth, // Độ dày tuyết (cm)
+      // soilMoisture: data.values.soilMoisture, // Độ ẩm đất (m³/m³)
+      // evapotranspiration: data.values.evapotranspiration, // Lượng bốc hơi (mm)
+      // pollenIndexTree: data.values.pollenIndexTree, // Chỉ số phấn hoa cây (0-5)
+      // pollenIndexWeed: data.values.pollenIndexWeed, // Chỉ số phấn hoa cỏ dại (0-5)
+      // pollenIndexGrass: data.values.pollenIndexGrass, // Chỉ số phấn hoa cỏ (0-5)
+      // airQualityIndex: data.values.airQualityIndex, // Chỉ số chất lượng không khí (AQI)
     });
   } catch (err) {
     console.error(err.response?.data || err.message);
