@@ -20,6 +20,7 @@ router.get('/current', async (req, res) => {
 
         const data = response.data;
         res.json({
+            // Trả về dữ liệu thời tiết hiện tại, những thông tin bị comment lại là bị null
             city: data.location.name,
             country: data.location.country,
             temp_c: data.current.temp_c,

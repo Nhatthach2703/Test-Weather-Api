@@ -154,6 +154,7 @@ router.get('/current', async (req, res) => {
 
     const data = response.data.data;
     res.json({
+      // Trả về dữ liệu thời tiết hiện tại, những thông tin bị comment lại là bị null
       city,
       temperature: data.values.temperature, // Nhiệt độ thực tế (°C)
       temperatureApparent: data.values.temperatureApparent, // Nhiệt độ cảm nhận (°C)
