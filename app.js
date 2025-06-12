@@ -6,7 +6,7 @@ require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-const weatherRouter = require('./routes/openweathermap');
+const openweathermapRouter = require('./routes/openweathermap');
 var weatherapiRouter = require('./routes/weatherapi');
 const tomorrowRouter = require('./routes/tomorrow');
 
@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/weather', weatherRouter);
+app.use('/openweathermap', openweathermapRouter);
 app.use('/weatherapi', weatherapiRouter); // best API theo Thạch test =)))))
 app.use('/tomorrow', tomorrowRouter);
 
