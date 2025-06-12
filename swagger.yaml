@@ -1,0 +1,622 @@
+openapi: 3.0.0
+info:
+  title: Weather API
+  version: 2.0.0
+  description: A comprehensive Weather API that aggregates data from multiple providers (OpenWeatherMap, WeatherAPI.com, Tomorrow.io) for Vietnamese cities and provinces
+  contact:
+    name: API Support
+    email: support@weatherapi.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.yourweatherapp.com
+    description: Production server
+
+tags:
+  - name: General
+    description: General API information
+  - name: WeatherAPI.com
+    description: Weather data from WeatherAPI.com provider
+  - name: OpenWeatherMap
+    description: Weather data from OpenWeatherMap provider
+  - name: Tomorrow.io
+    description: Weather data from Tomorrow.io provider
+
+components:
+  schemas:
+    WeatherResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        data:
+          type: object
+          description: Weather data object
+        message:
+          type: string
+          description: Response message
+
+    CurrentWeatherAPIResponse:
+      type: object
+      properties:
+        city:
+          type: string
+          description: City name
+          example: "Ho Chi Minh City"
+        country:
+          type: string
+          description: Country name
+          example: "Vietnam"
+        temp_c:
+          type: number
+          description: Temperature in Celsius
+          example: 28.5
+        feelslike_c:
+          type: number
+          description: Feels like temperature in Celsius
+          example: 32.1
+        condition:
+          type: object
+          properties:
+            text:
+              type: string
+              description: Weather condition description
+              example: "Partly cloudy"
+            icon:
+              type: string
+              description: Weather condition icon URL
+              example: "//cdn.weatherapi.com/weather/64x64/day/116.png"
+        wind_kph:
+          type: number
+          description: Wind speed in km/h
+          example: 12.6
+        wind_degree:
+          type: number
+          description: Wind degree
+          example: 180
+        wind_dir:
+          type: string
+          description: Wind direction
+          example: "S"
+        humidity:
+          type: number
+          description: Humidity percentage
+          example: 75
+        pressure_mb:
+          type: number
+          description: Atmospheric pressure in milibar
+          example: 1013.2
+        precip_mm:
+          type: number
+          description: Precipitation in mm
+          example: 0.5
+        cloud:
+          type: number
+          description: Cloud coverage percentage
+          example: 50
+        uv:
+          type: number
+          description: UV index
+          example: 7
+        vis_km:
+          type: number
+          description: Visibility in km
+          example: 10
+        gust_kph:
+          type: number
+          description: Wind gust in km/h
+          example: 18.4
+
+    OpenWeatherMapCurrentResponse:
+      type: object
+      properties:
+        city:
+          type: string
+          example: "Ho Chi Minh City"
+        coord:
+          type: object
+          properties:
+            lat:
+              type: number
+              example: 10.8231
+            lon:
+              type: number
+              example: 106.6297
+        country:
+          type: string
+          example: "VN"
+        temperature:
+          type: number
+          example: 28.5
+        feels_like:
+          type: number
+          example: 32.1
+        temp_min:
+          type: number
+          example: 26.2
+        temp_max:
+          type: number
+          example: 30.8
+        pressure:
+          type: number
+          example: 1013
+        humidity:
+          type: number
+          example: 75
+        visibility:
+          type: number
+          example: 10000
+        wind_speed:
+          type: string
+          example: "12.60"
+        wind_deg:
+          type: number
+          example: 180
+        clouds:
+          type: number
+          example: 50
+        weather:
+          type: string
+          example: "few clouds"
+        weather_main:
+          type: string
+          example: "Clouds"
+
+    TomorrowCurrentResponse:
+      type: object
+      properties:
+        city:
+          type: string
+          example: "Ho Chi Minh"
+        temperature:
+          type: number
+          example: 28.5
+        temperatureApparent:
+          type: number
+          example: 32.1
+        dewPoint:
+          type: number
+          example: 24.3
+        humidity:
+          type: number
+          example: 75
+        pressureSeaLevel:
+          type: number
+          example: 1013.2
+        windSpeed:
+          type: number
+          example: 3.5
+        windDirection:
+          type: number
+          example: 180
+        cloudCover:
+          type: number
+          example: 50
+        visibility:
+          type: number
+          example: 10
+        uvIndex:
+          type: number
+          example: 7
+        weatherCode:
+          type: number
+          example: 1000
+
+    ForecastDay:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Forecast date
+          example: "2025-01-15"
+        condition:
+          type: object
+          properties:
+            text:
+              type: string
+              example: "Sunny"
+            icon:
+              type: string
+              example: "//cdn.weatherapi.com/weather/64x64/day/113.png"
+        avg_temp_c:
+          type: number
+          example: 29.2
+        max_temp_c:
+          type: number
+          example: 32.1
+        min_temp_c:
+          type: number
+          example: 26.3
+
+    APIInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Weather API"
+        version:
+          type: string
+          example: "1.0.0"
+        description:
+          type: string
+          example: "A comprehensive Weather API that aggregates data from multiple providers"
+        providers:
+          type: array
+          items:
+            type: string
+          example:
+            - "WeatherAPI.com"
+            - "OpenWeatherMap"
+            - "Tomorrow.io"
+        endpoints:
+          type: object
+          properties:
+            weatherapi:
+              type: array
+              items:
+                type: string
+              example:
+                - "/weatherapi/current"
+                - "/weatherapi/forecast"
+        documentation:
+          type: string
+          example: "/api-docs"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+  parameters:
+    CityParameter:
+      name: city
+      in: query
+      required: true
+      description: Name of the city (Vietnamese cities supported)
+      schema:
+        type: string
+        example: "Ho Chi Minh City"
+
+    DaysParameter:
+      name: days
+      in: query
+      required: false
+      description: Number of forecast days
+      schema:
+        type: integer
+        minimum: 1
+        default: 3
+
+paths:
+  /:
+    get:
+      summary: API Information
+      description: Get basic information about the Weather API service
+      tags:
+        - General
+      responses:
+        '200':
+          description: API information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIInfo'
+
+  /weatherapi/current:
+    get:
+      summary: Get current weather from WeatherAPI.com
+      description: Retrieve current weather information for a specified city using WeatherAPI.com service
+      tags:
+        - WeatherAPI.com
+      parameters:
+        - $ref: '#/components/parameters/CityParameter'
+      responses:
+        '200':
+          description: Current weather data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentWeatherAPIResponse'
+        '400':
+          description: Bad request - City parameter is required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "City is required"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Failed to fetch weather"
+
+  /weatherapi/forecast:
+    get:
+      summary: Get weather forecast from WeatherAPI.com
+      description: Retrieve weather forecast for specified number of days for a city using WeatherAPI.com service
+      tags:
+        - WeatherAPI.com
+      parameters:
+        - $ref: '#/components/parameters/CityParameter'
+        - name: days
+          in: query
+          required: false
+          description: Number of forecast days (1-10, default is 3)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 3
+            example: 5
+      responses:
+        '200':
+          description: Weather forecast data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  city:
+                    type: string
+                    example: "Ho Chi Minh City"
+                  forecast:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ForecastDay'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /openweathermap/current:
+    get:
+      summary: Get current weather from OpenWeatherMap
+      description: Retrieve current weather information for a specified city using OpenWeatherMap service
+      tags:
+        - OpenWeatherMap
+      parameters:
+        - $ref: '#/components/parameters/CityParameter'
+      responses:
+        '200':
+          description: Current weather data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenWeatherMapCurrentResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /openweathermap/forecast:
+    get:
+      summary: Get weather forecast from OpenWeatherMap
+      description: Retrieve weather forecast for specified number of days for a city using OpenWeatherMap service
+      tags:
+        - OpenWeatherMap
+      parameters:
+        - $ref: '#/components/parameters/CityParameter'
+        - name: days
+          in: query
+          required: false
+          description: Number of forecast days (1-5, default is 1)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            default: 1
+            example: 3
+      responses:
+        '200':
+          description: Weather forecast data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  city:
+                    type: string
+                    example: "Ho Chi Minh City"
+                  forecast:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          example: "2025-01-15"
+                        temperature:
+                          type: number
+                          example: 29.2
+                        weather:
+                          type: string
+                          example: "few clouds"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tomorrow/current:
+    get:
+      summary: Get current weather from Tomorrow.io
+      description: Retrieve current weather information for a specified Vietnamese city using Tomorrow.io service
+      tags:
+        - Tomorrow.io
+      parameters:
+        - name: city
+          in: query
+          required: true
+          description: Name of the Vietnamese city (predefined list supported)
+          schema:
+            type: string
+            enum:
+              - "Hanoi"
+              - "Ho Chi Minh"
+              - "Danang"
+              - "Haiphong"
+              - "Cantho"
+              - "Hue"
+              - "Nhatrang"
+              - "Vungtau"
+              - "QuyNhon"
+              - "PhanThiet"
+              - "Dalat"
+              - "BuonMaThuot"
+              - "Pleiku"
+              - "RachGia"
+              - "CaMau"
+              - "Vinh"
+              - "ThanhHoa"
+              - "HaLong"
+              - "ThaiNguyen"
+              - "BacNinh"
+            example: "Ho Chi Minh"
+      responses:
+        '200':
+          description: Current weather data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TomorrowCurrentResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tomorrow/forecast:
+    get:
+      summary: Get weather forecast from Tomorrow.io
+      description: Retrieve weather forecast for specified number of days for a Vietnamese city using Tomorrow.io service
+      tags:
+        - Tomorrow.io
+      parameters:
+        - name: city
+          in: query
+          required: true
+          description: Name of the Vietnamese city (predefined list supported)
+          schema:
+            type: string
+            enum:
+              - "Hanoi"
+              - "Ho Chi Minh"
+              - "Danang"
+              - "Haiphong"
+              - "Cantho"
+              - "Hue"
+              - "Nhatrang"
+              - "Vungtau"
+              - "QuyNhon"
+              - "PhanThiet"
+              - "Dalat"
+              - "BuonMaThuot"
+              - "Pleiku"
+              - "RachGia"
+              - "CaMau"
+              - "Vinh"
+              - "ThanhHoa"
+              - "HaLong"
+              - "ThaiNguyen"
+              - "BacNinh"
+            example: "Ho Chi Minh"
+        - name: days
+          in: query
+          required: false
+          description: Number of forecast days (default is 3)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 15
+            default: 3
+            example: 5
+      responses:
+        '200':
+          description: Weather forecast data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  city:
+                    type: string
+                    example: "Ho Chi Minh"
+                  forecast:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          example: "2025-01-15"
+                        temperatureMaxC:
+                          type: number
+                          example: 32.1
+                        temperatureMinC:
+                          type: number
+                          example: 26.3
+                        temperatureAvgC:
+                          type: number
+                          example: 29.2
+                        humidityAvg:
+                          type: number
+                          example: 75
+                        windSpeedMaxKph:
+                          type: number
+                          example: 18.4
+                        weatherCode:
+                          type: number
+                          example: 1000
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

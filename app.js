@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const { swaggerUi, specs } = require('./config/swagger');
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
@@ -23,5 +24,12 @@ app.use('/users', usersRouter);
 app.use('/openweathermap', openweathermapRouter);
 app.use('/weatherapi', weatherapiRouter); // best API theo Thạch test =)))))
 app.use('/tomorrow', tomorrowRouter);
+
+// Swagger API Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "Weather API Documentation"
+}));
 
 module.exports = app;
